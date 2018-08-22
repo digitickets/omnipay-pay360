@@ -1,0 +1,35 @@
+{
+  "name": "digitickets/omnipay-Pay360",
+  "type": "library",
+  "description": "Payment Gateway driver for Pay360",
+  "keywords": [
+    "Pay360",
+    "gateway",
+    "merchant",
+    "omnipay",
+    "pay",
+    "payment"
+  ],
+  "homepage": "https://github.com/digitickets/omnipay-pay360",
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "Glenn Jenkins",
+      "email": "glenn.jenkins@digitickets.co.uk",
+      "role": "Developer"
+    }
+  ],
+  "autoload": {
+    "psr-4": {
+      "DigiTickets\\Pay360\\": "src"
+    }
+  },
+  "require": {
+    "omnipay/common": "~2.0"
+  },
+  "require-dev": {
+    "omnipay/tests": "~2.0"
+  },
+  "minimum-stability": "dev",
+  "prefer-stable": true
+}
