@@ -6,6 +6,8 @@ use Omnipay\Common\Message\AbstractRequest;
 
 class PurchaseRequest extends AbstractRequest
 {
+    const SERVICE_ENDPOINT = 'https://sbsctest.e-paycapita.com/scp/scpws/scpSimpleClient.wsdl';
+    
     public function getReturnUrl()
     {
         return $this->getParameter('returnUrl');
@@ -35,6 +37,11 @@ class PurchaseRequest extends AbstractRequest
     public function setAmount($value)
     {
         return $this->setParameter('amount', $value);
+    }
+    
+    protected function getEndpoint()
+    {
+        return self::SERVICE_ENDPOINT;
     }
     
     protected function generateDigest(
@@ -116,6 +123,13 @@ error_log('After $data');
     public function sendData($data)
     {
 error_log('sendData...');
-        return $this->response = new PurchaseResponse($this, $data);
+        // post to Capita
+        $processMessage = new \SOAPClient($this->getEndpoint());
+error_log('ONE');
+        $response = $processMessage->__soapCall('scpSimpleInvoke', ['scpSimpleInvokeRequest' => $data]);
+error_log('TWO');
+error_log('$response: '.var_export($response, true));
+    
+        return $this->response = new PurchaseResponse($this, $response);
     }
 }
