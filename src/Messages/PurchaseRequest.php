@@ -47,10 +47,29 @@ class PurchaseRequest extends AbstractRequest
     protected function generateDigest(
         \scpService_subject $subject,
         \scpService_requestIdentification $requestIdentification,
-        \scpService_signature$signature
+        \scpService_signature $signature
     ){
 error_log('generateDigest...');
-        return 'TBC';
+        $digest = implode(
+            '!',
+            [
+                $subject->subjectType,
+                $subject->identifier,
+                $requestIdentification->uniqueReference,
+                $requestIdentification->timeStamp,
+                $signature->algorithm,
+                $signature->hmacKeyID,
+            ]
+        );
+//error_log('Digest stage one: '.$digest);
+        $digest = utf8_encode($digest);
+//error_log('Digest stage two: '.$digest);
+        $key = 'XXX'; // base64_decode($secretKey); // @TODO: needs to be in the config.
+        $hash = hash_hmac('sha256', $digest, $key, true);
+        $digest = base64_encode($hash);
+error_log('Digest stage three: '.$digest);
+        
+        return $digest;
     }
     
     public function getData()
@@ -97,7 +116,19 @@ error_log('After $routing');
         $saleSummary->displayableReference = 'Displayable Reference'; // Gets overwritten by items, apparently.
 error_log('After $saleSummary');
 
-        $items = $unknown; // @TODO: Comes from the item bag thing.
+        $items = [];
+        /** @var \Omnipay\Common\Item $itemBagItem */
+        foreach ($this->getItems() as $itemBagItem) {
+            $itemSummary = new \scpService_summaryData();
+            $itemSummary->description = $itemBagItem->getDescription();
+            $itemSummary->amountInMinorUnits = 100*$itemBagItem->getPrice();
+            
+            $item = new \scpService_simpleItem();
+            $item->itemSummary = $itemSummary;
+            $item->quantity = $itemBagItem->getQuantity();
+            
+            $items[] = $item;
+        }
 error_log('After $items');
 
         $sale = new \scpService_simpleSale();
