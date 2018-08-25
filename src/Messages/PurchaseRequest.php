@@ -6,7 +6,8 @@ use Omnipay\Common\Message\AbstractRequest;
 
 class PurchaseRequest extends AbstractRequest
 {
-    const SERVICE_ENDPOINT_TEST = 'https://sbsctest.e-paycapita.com/scp/flow/start_flow?execution=e1s1&cpid=i02hh5etcr0en1ddmcbvs667ziru08l&uiid=DFLT:669:373037774:ECOM:en:';
+//    const SERVICE_ENDPOINT_TEST = 'https://sbsctest.e-paycapita.com/scp/flow/start_flow?execution=e1s1&cpid=i02hh5etcr0en1ddmcbvs667ziru08l&uiid=DFLT:669:373037774:ECOM:en:';
+    const SERVICE_ENDPOINT_TEST = 'https://sbsctest.e-paycapita.com/scp/scpws/scpSimpleClient.wsdl';
     const SERVICE_ENDPOINT_LIVE = 'https://sbs.e-paycapita.com/scp/flow/start_flow?execution=e1s1&cpid=rt5d0cohghzx4uorws36y8979zpmy92&uiid=DFLT:669:373037774:ECOM:en:';
 
     public function getReturnUrl()
@@ -40,16 +41,33 @@ class PurchaseRequest extends AbstractRequest
         return $this->setParameter('amount', $value);
     }
 
-    public function getSecretKey()
+    public function getSignatureHmacKeyID()
     {
-        return 'OXIaZcZSG4kp5h3/sJeIHFdXooCsS7eRFiEbM/vpmDRQ0r8HVme7gKLH5yZqC6cJ5lCFZrEBBqMQTQdngALtJg=='; // @TODO: Temporary; needs to come from config
-//        return $this->getParameter('secretKey');
+        return '456'; // @TODO: Replace this with the proper config.
+//        return $this->getParameter('signatureHmacKeyID');
     }
 
-    public function getScpId()
+    public function getRoutingSiteId()
     {
-        return '373037774'; // @TODO: Temporary; needs to come from config
-//        return $this->getParameter('scpId');
+        return '008'; // @TODO: Replace this with the proper config.
+//        return $this->getParameter('routingSiteId');
+    }
+
+    public function getSubjectIdentifier()
+    {
+        return $this->getRoutingScpId();
+    }
+
+    public function getRoutingScpId()
+    {
+        return '373037774'; // @TODO: Replace this with the proper config.
+//        return $this->getParameter('routingScpId');
+    }
+
+    public function getSecretKey()
+    {
+        return 'OXIaZcZSG4kp5h3/sJeIHFdXooCsS7eRFiEbM/vpmDRQ0r8HVme7gKLH5yZqC6cJ5lCFZrEBBqMQTQdngALtJg=='; // @TODO: Replace this with the proper config.
+//        return $this->getParameter('secretKey');
     }
 
     protected function getEndpoint()
@@ -90,11 +108,10 @@ error_log('Digest stage three: '.$digest);
 error_log('getData...');
         $unknown = 'n/k'; // @TODO: Temporary
         $optional = 'TBA'; // @TODO: Temporary
-        $config = '11223344';
 
         $subject = new \scpService_subject();
         $subject->subjectType = \scpService_subjectType::CAPITA_PORTAL;
-        $subject->identifier = $config;  // Same as $routing->siteId
+        $subject->identifier = $this->getSubjectIdentifier();  // Same as $routing->siteId
         $subject->systemCode = \scpService_systemCode::SCP;
 error_log('After $subject');
 
@@ -105,7 +122,7 @@ error_log('After $requestIdentification');
 
         $signature = new \scpService_signature();
         $signature->algorithm = \scpService_algorithm::ORIGINAL;
-        $signature->hmacKeyID = $config;
+        $signature->hmacKeyID = $this->getSignatureHmacKeyID();
         $signature->digest = $this->generateDigest($subject, $requestIdentification, $signature);
 error_log('After $signature');
 
@@ -118,13 +135,13 @@ error_log('After $credentials');
         $routing = new \scpService_routing();
         $routing->returnUrl = $this->getReturnUrl();
         $routing->backUrl = $this->getBackUrl();
-        $routing->siteId = $config;
-        $routing->scpId = $this->getScpId();
+        $routing->siteId = $this->getRoutingSiteId();
+        $routing->scpId = $this->getRoutingScpId();
 error_log('After $routing');
 
         $saleSummary = new \scpService_summaryData();
         $saleSummary->description = 'Online Sale'; // Gets overwritten by items, apparently.
-        $saleSummary->amountInMinorUnits = 100 * $this->getAmount();
+        $saleSummary->amountInMinorUnits = (int) (100 * $this->getAmount());
         $saleSummary->reference = 'Reference'; // Gets overwritten by items, apparently.
         $saleSummary->displayableReference = 'Displayable Reference'; // Gets overwritten by items, apparently.
 error_log('After $saleSummary');
@@ -133,8 +150,8 @@ error_log('After $saleSummary');
         /** @var \Omnipay\Common\Item $itemBagItem */
         foreach ($this->getItems() as $itemBagItem) {
             $itemSummary = new \scpService_summaryData();
-            $itemSummary->description = $itemBagItem->getDescription();
-            $itemSummary->amountInMinorUnits = 100*$itemBagItem->getPrice();
+            $itemSummary->description = $itemBagItem->getName();
+            $itemSummary->amountInMinorUnits = (int) (100*$itemBagItem->getPrice());
 
             $item = new \scpService_simpleItem();
             $item->itemSummary = $itemSummary;
@@ -167,11 +184,13 @@ error_log('After $data');
     public function sendData($data)
     {
 error_log('sendData...');
+error_log('$data to send: '.var_export($data, true));
         // post to Capita
         $processMessage = new \SOAPClient($this->getEndpoint());
 error_log('ONE');
 error_log('Functions: '.var_export($processMessage->__getFunctions(), true));
         $response = $processMessage->__soapCall('scpSimpleInvoke', ['scpSimpleInvokeRequest' => $data]);
+//        $response = $processMessage->__soapCall('scpSimpleInvoke', ['scpSimpleInvokeRequest' => $data]);
 error_log('TWO');
 error_log('$response: '.var_export($response, true));
 
