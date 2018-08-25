@@ -7,7 +7,9 @@ use Omnipay\Common\Message\AbstractRequest;
 class PurchaseRequest extends AbstractRequest
 {
 //    const SERVICE_ENDPOINT_TEST = 'https://sbsctest.e-paycapita.com/scp/flow/start_flow?execution=e1s1&cpid=i02hh5etcr0en1ddmcbvs667ziru08l&uiid=DFLT:669:373037774:ECOM:en:';
-    const SERVICE_ENDPOINT_TEST = 'https://sbsctest.e-paycapita.com/scp/scpws/scpSimpleClient.wsdl';
+//    const SERVICE_ENDPOINT_TEST = 'https://sbsctest.e-paycapita.com/scp/scpws/scpSimpleClient.wsdl';
+//    const SERVICE_ENDPOINT_TEST = 'https://sbsctest.e-paycapita.com/scp/scpws/scpClient';
+    const SERVICE_ENDPOINT_TEST = 'https://sbsctest.e-paycapita.com/scp/scpws/scpClient.wsdl';
     const SERVICE_ENDPOINT_LIVE = 'https://sbs.e-paycapita.com/scp/flow/start_flow?execution=e1s1&cpid=rt5d0cohghzx4uorws36y8979zpmy92&uiid=DFLT:669:373037774:ECOM:en:';
 
     public function getReturnUrl()
@@ -76,9 +78,9 @@ class PurchaseRequest extends AbstractRequest
     }
 
     protected function generateDigest(
-        \scpService_subject $subject,
-        \scpService_requestIdentification $requestIdentification,
-        \scpService_signature $signature
+        /*\scpService_subject*/ $subject,
+        /*\scpService_requestIdentification*/ $requestIdentification,
+        /*\scpService_signature*/ $signature
     ){
 error_log('generateDigest...');
         $digest = implode(
@@ -170,12 +172,35 @@ error_log('After $items');
         $sale->items = $items;
 error_log('After $sale');
 
-        $data = new \scpService_scpSimpleInvokeRequest();
+        // For simple invoke request
+//        $data = new \scpService_scpSimpleInvokeRequest();
+//        $data->credentials = $credentials;
+//        $data->requestType = \scpService_requestType::PAY_ONLY;
+//        $data->requestId = $unknown; // Customer-supplied request id - TBC
+//        $data->routing = $routing;
+//        $data->sale = $sale;
+
+        // For version request
+        $data = new \scpService_scpVersionRequest();
         $data->credentials = $credentials;
-        $data->requestType = \scpService_requestType::PAY_ONLY;
-        $data->requestId = $unknown; // Customer-supplied request id - TBC
-        $data->routing = $routing;
-        $data->sale = $sale;
+
+        // For version request using stdClass instead of the generated classes.
+//        $subject = new \stdClass();
+//        $subject->subjectType = \scpService_subjectType::CAPITA_PORTAL;
+//        $subject->identifier = $this->getSubjectIdentifier();  // Same as $routing->siteId
+//        $subject->systemCode = \scpService_systemCode::SCP;
+//        $requestIdentification = new \stdClass();
+//        $requestIdentification->uniqueReference = $this->getTransactionId();
+//        $requestIdentification->timeStamp = date('YmdHis'); // Format: YYYYMMDDHHMMSS
+//        $signature = new \stdClass();
+//        $signature->algorithm = \scpService_algorithm::ORIGINAL;
+//        $signature->hmacKeyID = $this->getSignatureHmacKeyID();
+//        $signature->digest = $this->generateDigest($subject, $requestIdentification, $signature);
+//        $data = new \stdClass();
+//        $data->credentials = new \stdClass();
+//        $data->credentials->subject = $subject;
+//        $data->credentials->requestIdentification = $requestIdentification;
+//        $data->credentials->signature = $signature;
 error_log('After $data');
 
         return $data;
@@ -185,11 +210,14 @@ error_log('After $data');
     {
 error_log('sendData...');
 error_log('$data to send: '.var_export($data, true));
+error_log('Sending it to: '.$this->getEndpoint());
         // post to Capita
         $processMessage = new \SOAPClient($this->getEndpoint());
 error_log('ONE');
 error_log('Functions: '.var_export($processMessage->__getFunctions(), true));
-        $response = $processMessage->__soapCall('scpSimpleInvoke', ['scpSimpleInvokeRequest' => $data]);
+        // Use the appropriate block of code to generate $data in getData() above. Ie the uncommented block above must match the uncommented line below.
+        $response = $processMessage->__soapCall('scpVersion', ['scpVersionRequest' => $data]);
+//        $response = $processMessage->__soapCall('scpInvoke', ['scpInvokeRequest' => $data]);
 //        $response = $processMessage->__soapCall('scpSimpleInvoke', ['scpSimpleInvokeRequest' => $data]);
 error_log('TWO');
 error_log('$response: '.var_export($response, true));
