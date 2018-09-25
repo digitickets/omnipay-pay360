@@ -6,11 +6,7 @@ use Omnipay\Common\Message\AbstractRequest;
 
 class PurchaseRequest extends AbstractRequest
 {
-//    const SERVICE_ENDPOINT_TEST = 'https://sbsctest.e-paycapita.com/scp/flow/start_flow?execution=e1s1&cpid=i02hh5etcr0en1ddmcbvs667ziru08l&uiid=DFLT:669:373037774:ECOM:en:';
-//    const SERVICE_ENDPOINT_TEST = 'https://sbsctest.e-paycapita.com/scp/scpws/scpSimpleClient.wsdl';
-//    const SERVICE_ENDPOINT_TEST = 'https://sbsctest.e-paycapita.com/scp/scpws/scpClient';
-    const SERVICE_ENDPOINT_TEST = 'https://sbsctest.e-paycapita.com/scp/scpws/scpClient.wsdl';
-    const SERVICE_ENDPOINT_LIVE = 'https://sbs.e-paycapita.com/scp/flow/start_flow?execution=e1s1&cpid=rt5d0cohghzx4uorws36y8979zpmy92&uiid=DFLT:669:373037774:ECOM:en:';
+    const SERVICE_ENDPOINT_TEST = 'https://sbsctest.e-paycapita.com/scp/scpws/scpClient';
 
     public function getReturnUrl()
     {
@@ -173,16 +169,16 @@ error_log('After $items');
 error_log('After $sale');
 
         // For simple invoke request
-//        $data = new \scpService_scpSimpleInvokeRequest();
-//        $data->credentials = $credentials;
-//        $data->requestType = \scpService_requestType::PAY_ONLY;
-//        $data->requestId = $unknown; // Customer-supplied request id - TBC
-//        $data->routing = $routing;
-//        $data->sale = $sale;
+        $data = new \scpService_scpSimpleInvokeRequest();
+        $data->credentials = $credentials;
+        $data->requestType = \scpService_requestType::PAY_ONLY;
+        $data->requestId = $unknown; // Customer-supplied request id - TBC
+        $data->routing = $routing;
+        $data->sale = $sale;
 
         // For version request
-        $data = new \scpService_scpVersionRequest();
-        $data->credentials = $credentials;
+//        $data = new \scpService_scpVersionRequest();
+//        $data->credentials = $credentials;
 
         // For version request using stdClass instead of the generated classes.
 //        $subject = new \stdClass();
@@ -211,14 +207,14 @@ error_log('After $data');
 error_log('sendData...');
 error_log('$data to send: '.var_export($data, true));
 error_log('Sending it to: '.$this->getEndpoint());
-        // post to Capita
+        // Post to Capita.
         $processMessage = new \SOAPClient($this->getEndpoint());
 error_log('ONE');
 error_log('Functions: '.var_export($processMessage->__getFunctions(), true));
         // Use the appropriate block of code to generate $data in getData() above. Ie the uncommented block above must match the uncommented line below.
-        $response = $processMessage->__soapCall('scpVersion', ['scpVersionRequest' => $data]);
+//        $response = $processMessage->__soapCall('scpVersion', ['scpVersionRequest' => $data]);
 //        $response = $processMessage->__soapCall('scpInvoke', ['scpInvokeRequest' => $data]);
-//        $response = $processMessage->__soapCall('scpSimpleInvoke', ['scpSimpleInvokeRequest' => $data]);
+        $response = $processMessage->__soapCall('scpSimpleInvoke', ['scpSimpleInvokeRequest' => $data]);
 error_log('TWO');
 error_log('$response: '.var_export($response, true));
 
