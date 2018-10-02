@@ -10,7 +10,7 @@ Omnipay implementation of the Pay360 payment gateway.
 
 ## Installation
 
-**Important: Driver requires [PHP's Intl extension](http://php.net/manual/en/book.intl.php) to be installed.**
+**Important: Driver requires [PHP's Intl extension](http://php.net/manual/en/book.intl.php) and [PHP's SOAP extension](http://php.net/manual/en/book.soap.php) to be installed.**
 
 The Pay360 Omnipay driver is installed via [Composer](http://getcomposer.org/). To install, simply add it
 to your `composer.json` file:

@@ -7,14 +7,63 @@ use Omnipay\Common\Message\RedirectResponseInterface;
 
 class PurchaseResponse extends AbstractResponse implements RedirectResponseInterface
 {
+
+    /**
+     * @var bool
+     */
+    private $isSuccessful = false;
+
+    /**
+     * @var null|string
+     */
+    private $redirectUrl = null;
+
+    /**
+     * @var bool
+     */
+    private $isRedirect = false;
+
+    /**
+     * @var string
+     */
+    private $code;
+
+    /**
+     * @var string
+     */
+    private $message;
+
+    /**
+     * PurchaseResponse constructor.
+     * @param PurchaseRequest $purchaseRequest
+     * @param \scpService_scpInvokeResponse|\Throwable $scpResponse
+     */
+    public function __construct(
+        PurchaseRequest $purchaseRequest,
+        $scpResponse = null
+    ) {
+        if (!($scpResponse instanceof \Throwable)) {
+            if (isset($scpResponse->invokeResult)) {
+                $this->setCode($scpResponse->invokeResult->status);
+                if ($scpResponse->invokeResult->status == 'SUCCESS') {
+                    $this->isRedirect = true;
+                    $this->redirectUrl = $scpResponse->invokeResult->redirectUrl;
+                } else {
+                    $this->setMessage($scpResponse->invokeResult->errorDetails->errorMessage);
+                }
+            }
+        }
+        $this->transactionRef = $scpResponse->scpReference;
+    }
+
     public function isSuccessful()
     {
-        return false; // @TODO: Finish this.
+        return $this->isSuccessful;
     }
 
     public function getRedirectUrl()
     {
-        return 'TBA';
+        return $this->redirectUrl;
     }
 
     public function getRedirectMethod()
@@ -25,5 +74,35 @@ class PurchaseResponse extends AbstractResponse implements RedirectResponseInter
     public function getRedirectData()
     {
         return null;
+    }
+
+    public function isRedirect()
+    {
+        return $this->isRedirect;
+    }
+
+    public function getTransactionReference()
+    {
+        return $this->transactionRef;
+    }
+
+    public function setMessage($message)
+    {
+        $this->message = $message;
+    }
+
+    public function getMessage()
+    {
+        return $this->message;
+    }
+
+    public function setCode($code)
+    {
+        $this->code = $code;
+    }
+
+    public function getCode()
+    {
+        return $this->code;
     }
 }
