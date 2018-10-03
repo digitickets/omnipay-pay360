@@ -76,7 +76,13 @@ abstract class AbstractPay360Request extends AbstractRequest
 
     protected function getEndpoint()
     {
-        return self::SERVICE_ENDPOINT_TEST;  // @TODO: This will depend on whether the account is live or not.
+        $serviceEndpoint = self::SERVICE_ENDPOINT_LIVE;
+
+        if ($this->getTestMode()) {
+            $serviceEndpoint = self::SERVICE_ENDPOINT_TEST;
+        }
+
+        return $serviceEndpoint;
     }
 
     protected function getCredentials()
@@ -127,5 +133,27 @@ abstract class AbstractPay360Request extends AbstractRequest
         $digest = base64_encode($hash);
 
         return $digest;
+    }
+
+    public function setScpService($scpService)
+    {
+        $this->setParameter('scpService', $scpService);
+    }
+
+    protected function getScpService()
+    {
+        if ($this->getParameter('scpService') == null) {
+            $scpClient = new \scpService(
+                $this->getEndpoint(),
+                [
+                    'encoding' => 'UTF-8',
+                    'exception' => true,
+                    'trace' => true,
+                ]
+            );
+            return $scpClient;
+        } else {
+            return $this->getParameter('scpService');
+        }
     }
 }

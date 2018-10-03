@@ -83,14 +83,7 @@ class PurchaseRequest extends AbstractPay360Request
     public function sendData($data)
     {
         try {
-            $scpClient = new \scpService(
-                self::SERVICE_ENDPOINT_TEST,
-                [
-                    'encoding' => 'UTF-8',
-                    'exception' => true,
-                    'trace' => true,
-                ]
-            );
+            $scpClient = $this->getScpService();
         } catch (\Throwable $t) {
             error_log($t->getMessage().' '.$t->getTraceAsString());
             return $this->response = new PurchaseResponse($this, $t);

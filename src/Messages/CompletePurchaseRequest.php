@@ -18,20 +18,17 @@ class CompletePurchaseRequest extends AbstractPay360Request
 
     public function sendData($data)
     {
-        $scpClient = new \scpService(
-            self::SERVICE_ENDPOINT_TEST,
-            [
-                'encoding' => 'UTF-8',
-                'exception' => true,
-                'trace' => true,
-            ]
-        );
-
+        try {
+            $scpClient = $this->getScpService();
+        } catch (\Throwable $t) {
+            error_log($t->getMessage().' '.$t->getTraceAsString());
+            return $this->response = new CompletePurchaseResponse($this, $t);
+        }
         try {
             $scpSimpleQueryResponse = $scpClient->scpSimpleQuery($data);
         } catch (\Throwable $t) {
             error_log($t->getMessage().' '.$t->getTraceAsString());
-            return $this->response = new PurchaseResponse($this, $t);
+            return $this->response = new CompletePurchaseResponse($this, $t);
         }
 
         return $this->response = new CompletePurchaseResponse($this, $scpSimpleQueryResponse);

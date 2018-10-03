@@ -27,4 +27,44 @@ class SimpleInterfaceGateway extends AbstractGateway
     {
         return $this->createRequest(CompletePurchaseRequest::class, $parameters);
     }
+
+    public function completeAuthorize()
+    {
+        throw new \Exception('Method not implemented', 500);
+    }
+
+    public function deleteCard(array $parameters = array())
+    {
+        throw new \Exception('Method not implemented', 500);
+    }
+
+    public function authorize()
+    {
+        throw new \Exception('Method not implemented', 500);
+    }
+
+    public function void()
+    {
+        throw new \Exception('Method not implemented', 500);
+    }
+
+    public function capture()
+    {
+        throw new \Exception('Method not implemented', 500);
+    }
+
+    public function createCard()
+    {
+        throw new \Exception('Method not implemented', 500);
+    }
+
+    public function updateCard()
+    {
+        throw new \Exception('Method not implemented', 500);
+    }
+
+    public function refund()
+    {
+        throw new \Exception('Method not implemented', 500);
+    }
 }
