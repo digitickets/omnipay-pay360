@@ -21,7 +21,6 @@ matrix:
       group: edge
   allow_failures:
     - php: nightly
-    - php: 7.2
 
 cache:
   directories:
