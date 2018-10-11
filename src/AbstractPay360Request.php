@@ -2,6 +2,8 @@
 
 namespace DigiTickets\Pay360;
 
+use DateTime;
+use DateTimeZone;
 use Omnipay\Common\Message\AbstractRequest;
 
 abstract class AbstractPay360Request extends AbstractRequest
@@ -89,7 +91,7 @@ abstract class AbstractPay360Request extends AbstractRequest
     {
         $this->requestIdentification = new \scpService_requestIdentification();
         $this->requestIdentification->uniqueReference = 'DT'.date('U');
-        $this->requestIdentification->timeStamp = date('YmdHis'); // Format: YYYYMMDDHHMMSS
+        $this->requestIdentification->timeStamp = (new DateTime('now', new DateTimeZone('UTC')))->format('YmdHis'); // Format: YYYYMMDDHHMMSS
 
         $subject = new \scpService_subject();
         $subject->subjectType = \scpService_subjectType::CAPITA_PORTAL;
