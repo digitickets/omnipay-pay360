@@ -2,5 +2,5 @@ parameters:
     autoload_files:
         - vendor/autoload.php
     ignoreErrors:
-        - 'Property scpService_scpInvokeRequest::$requestType (token) does not accept string' # wsdl defines "token" but doesn't reference it properly
-        - 'Property scpService_scpInvokeRequest::$requestId (token) does not accept string' # wsdl defines "token" but doesn't reference it properly
+        - '#Property scpService_scpInvokeRequest::$requestType (token) does not accept string#' # wsdl defines "token" but doesn't reference it properly
+        - '#Property scpService_scpInvokeRequest::$requestId (token) does not accept string#' # wsdl defines "token" but doesn't reference it properly
