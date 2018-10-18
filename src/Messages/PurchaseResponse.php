@@ -34,7 +34,7 @@ class PurchaseResponse extends AbstractResponse implements RedirectResponseInter
     private $message;
 
     /**
-     * @var string 
+     * @var string
      */
     private $transactionRef;
 
