@@ -31,7 +31,9 @@
     "omnipay/common": "~2.0"
   },
   "require-dev": {
-    "omnipay/tests": "~2.0"
+    "friendsofphp/php-cs-fixer": "^2.0",
+    "omnipay/tests": "~2.0",
+    "satooshi/php-coveralls": "^1.0"
   },
   "minimum-stability": "dev",
   "prefer-stable": true
