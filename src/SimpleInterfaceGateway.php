@@ -5,6 +5,29 @@ namespace DigiTickets\Pay360;
 use DigiTickets\Pay360\Messages\CompletePurchaseRequest;
 use DigiTickets\Pay360\Messages\PurchaseRequest;
 use Omnipay\Common\AbstractGateway;
+use Omnipay\Common\Message\RequestInterface;
+
+
+/**
+ * GoCardless Gateway
+ *
+ * @method RequestInterface authorize(array $options = array())         (Optional method)
+ *         Authorize an amount on the customers card
+ * @method RequestInterface completeAuthorize(array $options = array()) (Optional method)
+ *         Handle return from off-site gateways after authorization
+ * @method RequestInterface capture(array $options = array())           (Optional method)
+ *         Capture an amount you have previously authorized
+ * @method RequestInterface void(array $options = array())              (Optional method)
+ *         Generally can only be called up to 24 hours after submitting a transaction
+ * @method RequestInterface createCard(array $options = array())        (Optional method)
+ *         The returned response object includes a cardReference, which can be used for future transactions
+ * @method RequestInterface updateCard(array $options = array())        (Optional method)
+ *         Update a stored card
+ * @method RequestInterface deleteCard(array $options = array())        (Optional method)
+ *         Delete a stored card
+ * @method RequestInterface refund(array $options = array())           (Optional method)
+ *         Process a refund
+ */
 
 class SimpleInterfaceGateway extends AbstractGateway
 {
@@ -26,45 +49,5 @@ class SimpleInterfaceGateway extends AbstractGateway
     public function completePurchase(array $parameters = array())
     {
         return $this->createRequest(CompletePurchaseRequest::class, $parameters);
-    }
-
-    public function completeAuthorize()
-    {
-        throw new \Exception('Method not implemented', 500);
-    }
-
-    public function deleteCard(array $parameters = array())
-    {
-        throw new \Exception('Method not implemented', 500);
-    }
-
-    public function authorize()
-    {
-        throw new \Exception('Method not implemented', 500);
-    }
-
-    public function void()
-    {
-        throw new \Exception('Method not implemented', 500);
-    }
-
-    public function capture()
-    {
-        throw new \Exception('Method not implemented', 500);
-    }
-
-    public function createCard()
-    {
-        throw new \Exception('Method not implemented', 500);
-    }
-
-    public function updateCard()
-    {
-        throw new \Exception('Method not implemented', 500);
-    }
-
-    public function refund()
-    {
-        throw new \Exception('Method not implemented', 500);
     }
 }

@@ -59,7 +59,7 @@ class PurchaseRequest extends AbstractPay360Request
 
     public function getData()
     {
-        $this->validate('returnUrl','backUrl','routingSiteId','routingScpId','amount');
+        $this->validate('returnUrl','cancelUrl','routingSiteId','routingScpId','amount');
 
         $routing = new \scpService_routing();
         $routing->returnUrl = $this->getReturnUrl();

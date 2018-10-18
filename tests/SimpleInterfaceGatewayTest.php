@@ -81,7 +81,16 @@ class SimpleInterfaceGatewayTest extends GatewayTestCase
         $scpService = Mockery::mock(\scpService::class);
         $scpService->shouldReceive('scpSimpleInvoke')->andReturn($scpInvokeResponse);
 
-        $response = $this->gateway->purchase(array_merge($this->options, ['scpService' => $scpService]))->send();
+        $response = $this->gateway->purchase(
+            array_merge(
+                $this->options,
+                [
+                    'scpService' => $scpService,
+                    'routingSiteID' => '1231331',
+                    'routingScpId' => 24978567,
+                ]
+            )
+        )->send();
 
         $this->assertInstanceOf(\DigiTickets\Pay360\Messages\PurchaseResponse::class, $response);
         $this->assertFalse($response->isSuccessful());
@@ -104,11 +113,47 @@ class SimpleInterfaceGatewayTest extends GatewayTestCase
         $scpService = Mockery::mock(\scpService::class);
         $scpService->shouldReceive('scpSimpleInvoke')->andReturn($scpInvokeResponse);
 
-        $response = $this->gateway->purchase(array_merge($this->options, ['scpService' => $scpService]))->send();
+        $response = $this->gateway->purchase(
+            array_merge(
+                $this->options,
+                [
+                    'scpService' => $scpService,
+                    'routingSiteID' => '1231331',
+                    'routingScpId' => 24978567,
+                ]
+            )
+        )->send();
 
         $this->assertInstanceOf(\DigiTickets\Pay360\Messages\PurchaseResponse::class, $response);
         $this->assertFalse($response->isSuccessful());
         $this->assertFalse($response->isRedirect());
         $this->assertEquals('error message', $response->getMessage());
     }
+//
+//    public function testSupportsAuthorize()
+//    {
+//        $this->markTestSkipped('method not implemented');
+//        parent::testSupportsAuthorize();
+//    }
+//    public function testSupportsCompleteAuthorise()
+//    {
+//        $this->markTestSkipped('method not implemented');
+//        parent::testSupportsCompleteAuthorise();
+//    }
+//    public function testSupportsCapture()
+//    {
+//        $this->markTestSkipped('method not implemented');
+//        parent::testSupportsCapture();
+//    }
+//
+//    public function testSupportsRefund()
+//    {
+//        $this->markTestSkipped('method not implemented');
+//        parent::testSupportsAuthorize();
+//    }
+//    public function testSupportsVoid()
+//    {
+//        $this->markTestSkipped('method not implemented');
+//        parent::testSupportsVoid();
+//    }
 }
