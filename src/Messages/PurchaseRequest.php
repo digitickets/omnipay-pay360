@@ -66,7 +66,7 @@ class PurchaseRequest extends AbstractPay360Request
         $routing->scpId = $this->getRoutingScpId();
 
         $saleSummary = new \scpService_summaryData();
-        $saleSummary->description = 'Online Sale';
+        $saleSummary->description = $this->getTransactionReference();
         $saleSummary->amountInMinorUnits = $this->getAmountInteger();
 
         $items = [];
