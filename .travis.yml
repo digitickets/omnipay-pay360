@@ -47,10 +47,10 @@ script:
   fi;
 
 
-after_script:
-- if [[ "$COVERAGE" == "true" ]]; then
-    php vendor/bin/ocular code-coverage:upload --format=php-clover coverage.clover;
-  fi;
+#after_script:
+#- if [[ "$COVERAGE" == "true" ]]; then
+#    php vendor/bin/ocular code-coverage:upload --format=php-clover coverage.clover;
+#  fi;
 
 after_success:
 - if [[ "$COVERAGE" == "true" ]]; then
