@@ -34,6 +34,11 @@ class PurchaseResponse extends AbstractResponse implements RedirectResponseInter
     private $message;
 
     /**
+     * @var string 
+     */
+    private $transactionRef;
+
+    /**
      * PurchaseResponse constructor.
      * @param PurchaseRequest $purchaseRequest
      * @param \scpService_scpInvokeResponse|\Throwable $scpResponse
@@ -42,6 +47,7 @@ class PurchaseResponse extends AbstractResponse implements RedirectResponseInter
         PurchaseRequest $purchaseRequest,
         $scpResponse = null
     ) {
+        parent::__construct($purchaseRequest, $scpResponse);
         if (!($scpResponse instanceof \Throwable)) {
             if (isset($scpResponse->invokeResult)) {
                 $this->setCode($scpResponse->invokeResult->status);

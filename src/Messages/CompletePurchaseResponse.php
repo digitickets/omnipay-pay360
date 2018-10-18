@@ -2,13 +2,16 @@
 
 namespace DigiTickets\Pay360\Messages;
 
+use Omnipay\Common\Message\AbstractRequest;
 use Omnipay\Common\Message\AbstractResponse;
 
 class CompletePurchaseResponse extends AbstractResponse
 {
     public function getTransactionId()
     {
-        return $this->getRequest()->getTransactionId();
+        /** @var CompletePurchaseRequest|AbstractRequest $request */
+        $request = $this->getRequest();
+        return $request->getTransactionId();
     }
 
     public function getTransactionReference()
