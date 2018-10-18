@@ -71,7 +71,7 @@ class PurchaseRequest extends AbstractPay360Request
         $saleSummary->description = $this->getTransactionReference();
         $saleSummary->amountInMinorUnits = $this->getAmountInteger();
 
-        /** @var \scpService_simpleItem[] $items */
+        /** @var \scpService_simpleItem[]|\scpService_items $items */
         $items = [];
         $lineId = 1;
         /** @var \Omnipay\Common\Item $itemBagItem */
