@@ -67,7 +67,7 @@ class PurchaseRequest extends AbstractPay360Request
 
         $saleSummary = new \scpService_summaryData();
         $saleSummary->description = 'Online Sale';
-        $saleSummary->amountInMinorUnits = (int) (100 * $this->getAmount());
+        $saleSummary->amountInMinorUnits = $this->getAmountInteger();
 
         $items = [];
         $lineId = 1;
