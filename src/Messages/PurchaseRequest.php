@@ -37,6 +37,26 @@ class PurchaseRequest extends AbstractPay360Request
         return $this->setParameter('amount', $value);
     }
 
+    public function getReference()
+    {
+        return $this->getParameter('reference');
+    }
+
+    public function setReference($value)
+    {
+        $this->setParameter('reference', $value);
+    }
+
+    public function getFundCode()
+    {
+        return $this->getParameter('fundCode');
+    }
+
+    public function setFundCode($value)
+    {
+        $this->setParameter('fundCode', $value);
+    }
+
     public function getData()
     {
         $routing = new \scpService_routing();
@@ -56,9 +76,14 @@ class PurchaseRequest extends AbstractPay360Request
             $itemSummary = new \scpService_summaryData();
             $itemSummary->description = $itemBagItem->getName();
             $itemSummary->amountInMinorUnits = (int) (100*$itemBagItem->getPrice()) * $itemBagItem->getQuantity();
+            $itemSummary->reference = $this->getReference();
+
+            $lgItemItemDetails = new \scpService_lgItemDetails();
+            $lgItemItemDetails->fundCode = $this->getFundCode();
 
             $item = new \scpService_simpleItem();
             $item->itemSummary = $itemSummary;
+            $item->lgItemDetails = $lgItemItemDetails;
             $item->quantity = $itemBagItem->getQuantity();
             $item->lineId = $lineId++;
 

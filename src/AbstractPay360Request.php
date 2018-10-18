@@ -9,7 +9,7 @@ use Omnipay\Common\Message\AbstractRequest;
 abstract class AbstractPay360Request extends AbstractRequest
 {
     const SERVICE_ENDPOINT_TEST = 'https://sbsctest.e-paycapita.com/scp/scpws/scpSimpleClient.wsdl';
-    const SERVICE_ENDPOINT_LIVE = 'https://sbs.e-paycapita.com/scp/flow/start_flow?execution=e1s1&cpid=rt5d0cohghzx4uorws36y8979zpmy92&uiid=DFLT:669:373037774:ECOM:en:';
+    const SERVICE_ENDPOINT_LIVE = 'https://sbsc.e-paycapita.com/scp/scpws/scpSimpleClient.wsdl';
 
     /**
      * @var \scpService_requestIdentification
