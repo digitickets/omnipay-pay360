@@ -5,7 +5,7 @@
 Omnipay implementation of the Pay360 payment gateway.
 
 [![Build Status](https://travis-ci.org/digitickets/omnipay-pay360.png?branch=master)](https://travis-ci.org/digitickets/omnipay-pay360)
-[![Coverage Status](https://coveralls.io/repos/github/digitickets/omnipay-pay360/badge.svg?branch=master)](https://coveralls.io/github/digitickets/omnipay-gocardlessv2?branch=master)
+[![Coverage Status](https://coveralls.io/repos/github/digitickets/omnipay-pay360/badge.svg?branch=master)](https://coveralls.io/github/digitickets/omnipay-pay360?branch=master)
 [![Latest Stable Version](https://poser.pugx.org/digitickets/omnipay-pay360/version.png)](https://packagist.org/packages/digitickets/omnipay-pay360)
 [![Total Downloads](https://poser.pugx.org/digitickets/omnipay-pay360/d/total.png)](https://packagist.org/packages/digitickets/omnipay-pay360)
 

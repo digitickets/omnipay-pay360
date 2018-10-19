@@ -46,12 +46,6 @@ script:
    vendor/bin/phpunit;
   fi;
 
-
-#after_script:
-#- if [[ "$COVERAGE" == "true" ]]; then
-#    php vendor/bin/ocular code-coverage:upload --format=php-clover coverage.clover;
-#  fi;
-
 after_success:
 - if [[ "$COVERAGE" == "true" ]]; then
     travis_retry php vendor/bin/coveralls;
