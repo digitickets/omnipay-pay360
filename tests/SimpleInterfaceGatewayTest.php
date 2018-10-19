@@ -129,31 +129,4 @@ class SimpleInterfaceGatewayTest extends GatewayTestCase
         $this->assertFalse($response->isRedirect());
         $this->assertEquals('error message', $response->getMessage());
     }
-//
-//    public function testSupportsAuthorize()
-//    {
-//        $this->markTestSkipped('method not implemented');
-//        parent::testSupportsAuthorize();
-//    }
-//    public function testSupportsCompleteAuthorise()
-//    {
-//        $this->markTestSkipped('method not implemented');
-//        parent::testSupportsCompleteAuthorise();
-//    }
-//    public function testSupportsCapture()
-//    {
-//        $this->markTestSkipped('method not implemented');
-//        parent::testSupportsCapture();
-//    }
-//
-//    public function testSupportsRefund()
-//    {
-//        $this->markTestSkipped('method not implemented');
-//        parent::testSupportsAuthorize();
-//    }
-//    public function testSupportsVoid()
-//    {
-//        $this->markTestSkipped('method not implemented');
-//        parent::testSupportsVoid();
-//    }
 }
