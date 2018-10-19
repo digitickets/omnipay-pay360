@@ -81,7 +81,16 @@ class SimpleInterfaceGatewayTest extends GatewayTestCase
         $scpService = Mockery::mock(\scpService::class);
         $scpService->shouldReceive('scpSimpleInvoke')->andReturn($scpInvokeResponse);
 
-        $response = $this->gateway->purchase(array_merge($this->options, ['scpService' => $scpService]))->send();
+        $response = $this->gateway->purchase(
+            array_merge(
+                $this->options,
+                [
+                    'scpService' => $scpService,
+                    'routingSiteID' => '1231331',
+                    'routingScpId' => 24978567,
+                ]
+            )
+        )->send();
 
         $this->assertInstanceOf(\DigiTickets\Pay360\Messages\PurchaseResponse::class, $response);
         $this->assertFalse($response->isSuccessful());
@@ -104,7 +113,16 @@ class SimpleInterfaceGatewayTest extends GatewayTestCase
         $scpService = Mockery::mock(\scpService::class);
         $scpService->shouldReceive('scpSimpleInvoke')->andReturn($scpInvokeResponse);
 
-        $response = $this->gateway->purchase(array_merge($this->options, ['scpService' => $scpService]))->send();
+        $response = $this->gateway->purchase(
+            array_merge(
+                $this->options,
+                [
+                    'scpService' => $scpService,
+                    'routingSiteID' => '1231331',
+                    'routingScpId' => 24978567,
+                ]
+            )
+        )->send();
 
         $this->assertInstanceOf(\DigiTickets\Pay360\Messages\PurchaseResponse::class, $response);
         $this->assertFalse($response->isSuccessful());

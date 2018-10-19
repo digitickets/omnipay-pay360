@@ -24,8 +24,13 @@ class AbstractPay360RequestTest extends PHPUnit_Framework_TestCase
             {
                 return parent::getCredentials();
             }
-        };
 
+            public function getEndpoint()
+            {
+                return parent::getEndpoint();
+            }
+        };
+        $message->setTestMode(TRUE);
         $message->setCredentialsIdentifier('credentials identifier');
         $message->setRoutingScpId('routing scpid');
         $message->setRoutingSiteId('routing siteid');
@@ -48,6 +53,7 @@ class AbstractPay360RequestTest extends PHPUnit_Framework_TestCase
         $this->assertEquals('Original', $message->getCredentials()->signature->algorithm);
         $this->assertEquals('hmac key id', $message->getCredentials()->signature->hmacKeyID);
         $this->assertEquals('credentials identifier', $message->getCredentials()->identifier);
+        $this->assertEquals($message::SERVICE_ENDPOINT_TEST, $message->getEndpoint());
     }
 
     public function testGenerateDigest()

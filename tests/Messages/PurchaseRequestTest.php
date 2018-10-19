@@ -10,11 +10,18 @@ class PurchaseRequestTest extends PHPUnit_Framework_TestCase
         $request = Mockery::mock(\Symfony\Component\HttpFoundation\Request::class);
 
         $request = new PurchaseRequest($client, $request);
-
-        $request->setAmount(10.00);
-        $request->setReturnUrl('https://www.example.com/return');
-        $request->setCancelUrl('https://www.example.com/cancel');
-        $request->setReference('reference');
+        $request->initialize(
+            [
+                'amount' => 12.34,
+                'returnUrl' => 'https://www.example.com/return',
+                'cancelUrl' => 'https://www.example.com/cancel',
+                'reference' => 'reference',
+                'routingSiteID'=>'1231331',
+                'routingScpId'=>24978567
+            ]
+        );
+        $ref = "Hello Ma!";
+        $request->setTransactionReference($ref);
         $request->setFundCode(8);
         $request->setItems(
             [
@@ -22,13 +29,13 @@ class PurchaseRequestTest extends PHPUnit_Framework_TestCase
                     'description' => 'item 1',
                     'price' => 10.00,
                     'quantity' => 1,
-                ]
+                ],
             ]
         );
 
         $this->assertInstanceOf(\scpService_scpSimpleInvokeRequest::class, $request->getData());
-        $this->assertEquals('1000', $request->getData()->sale->saleSummary->amountInMinorUnits);
-        $this->assertEquals('Online Sale', $request->getData()->sale->saleSummary->description);
+        $this->assertEquals('1234', $request->getData()->sale->saleSummary->amountInMinorUnits);
+        $this->assertEquals($ref, $request->getData()->sale->saleSummary->description);
         $this->assertInternalType('array', $request->getData()->sale->items);
         $this->assertEquals(1, count($request->getData()->sale->items));
         $this->assertInstanceOf(scpService_simpleItem::class, $request->getData()->sale->items[0]);

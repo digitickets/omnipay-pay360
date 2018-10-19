@@ -59,6 +59,8 @@ class PurchaseRequest extends AbstractPay360Request
 
     public function getData()
     {
+        $this->validate('returnUrl','cancelUrl','routingSiteId','routingScpId','amount');
+
         $routing = new \scpService_routing();
         $routing->returnUrl = $this->getReturnUrl();
         $routing->backUrl = $this->getBackUrl();
@@ -66,9 +68,10 @@ class PurchaseRequest extends AbstractPay360Request
         $routing->scpId = $this->getRoutingScpId();
 
         $saleSummary = new \scpService_summaryData();
-        $saleSummary->description = 'Online Sale';
-        $saleSummary->amountInMinorUnits = (int) (100 * $this->getAmount());
+        $saleSummary->description = $this->getTransactionReference();
+        $saleSummary->amountInMinorUnits = $this->getAmountInteger();
 
+        /** @var \scpService_simpleItem[]|\scpService_items $items */
         $items = [];
         $lineId = 1;
         /** @var \Omnipay\Common\Item $itemBagItem */
