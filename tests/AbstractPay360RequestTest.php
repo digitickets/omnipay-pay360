@@ -30,7 +30,7 @@ class AbstractPay360RequestTest extends PHPUnit_Framework_TestCase
                 return parent::getEndpoint();
             }
         };
-
+        $message->setTestMode(TRUE);
         $message->setCredentialsIdentifier('credentials identifier');
         $message->setRoutingScpId('routing scpid');
         $message->setRoutingSiteId('routing siteid');
