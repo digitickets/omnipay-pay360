@@ -159,12 +159,12 @@ abstract class AbstractPay360Request extends AbstractRequest
         }
     }
 
-    protected function setGateway($value)
+    public function setGateway($value)
     {
-        $this->setParameter('gateway', $gateway);
+        $this->setParameter('gateway', $value);
     }
 
-    protected function getGateway()
+    public function getGateway()
     {
         return $this->getParameter('gateway');
     }
