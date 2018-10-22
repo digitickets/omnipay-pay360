@@ -131,13 +131,16 @@ class PurchaseRequest extends AbstractPay360Request
         } catch (\Throwable $t) {
             error_log($t->getMessage().' '.$t->getTraceAsString());
             foreach ($this->getGateway()->getListeners() as $listener) {
-                $listener->update('receiveException', $t);
+                $listener->update('receiveExceptionSend', $scpClient->__getLastRequest());
+                $listener->update('receiveExceptionRcv', $scpClient->__getLastResponse());
             }
             return $this->response = new PurchaseResponse($this, $t);
         }
 
         foreach ($this->getGateway()->getListeners() as $listener) {
             $listener->update('purchaseReceive', $scpSimpleInvokeResponse);
+            $listener->update('receiveExceptionSend', $scpClient->__getLastRequest());
+            $listener->update('receiveExceptionRcv', $scpClient->__getLastResponse());
         }
 
         return $this->response = new PurchaseResponse($this, $scpSimpleInvokeResponse);
