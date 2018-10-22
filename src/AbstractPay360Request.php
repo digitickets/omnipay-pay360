@@ -158,4 +158,14 @@ abstract class AbstractPay360Request extends AbstractRequest
             return $this->getParameter('scpService');
         }
     }
+
+    protected function setGateway($value)
+    {
+        $this->setParameter('gateway', $gateway);
+    }
+
+    protected function getGateway()
+    {
+        return $this->getParameter('gateway');
+    }
 }

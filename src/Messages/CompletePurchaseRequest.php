@@ -18,17 +18,31 @@ class CompletePurchaseRequest extends AbstractPay360Request
 
     public function sendData($data)
     {
+        foreach ($this->getGateway()->getListeners() as $listener) {
+            $listener->update('completeSend', $t);
+        }
+
         try {
             $scpClient = $this->getScpService();
         } catch (\Throwable $t) {
+            foreach ($this->getGateway()->getListeners() as $listener) {
+                $listener->update('clientException', $t);
+            }
             error_log($t->getMessage().' '.$t->getTraceAsString());
             return $this->response = new CompletePurchaseResponse($this, $t);
         }
         try {
             $scpSimpleQueryResponse = $scpClient->scpSimpleQuery($data);
         } catch (\Throwable $t) {
+            foreach ($this->getGateway()->getListeners() as $listener) {
+                $listener->update('completeException', $t);
+            }
             error_log($t->getMessage().' '.$t->getTraceAsString());
             return $this->response = new CompletePurchaseResponse($this, $t);
+        }
+
+        foreach ($this->getGateway()->getListeners() as $listener) {
+            $listener->update('completeReceive', $scpSimpleQueryResponse);
         }
 
         return $this->response = new CompletePurchaseResponse($this, $scpSimpleQueryResponse);

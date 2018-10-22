@@ -32,6 +32,11 @@ use Omnipay\Common\Message\RequestInterface;
 class SimpleInterfaceGateway extends AbstractGateway
 {
     /**
+     * @var array[Listener]
+     */
+    private $listeners = [];
+
+    /**
      * Get gateway display name
      *
      * This can be used by carts to get the display name for each gateway.
@@ -43,11 +48,23 @@ class SimpleInterfaceGateway extends AbstractGateway
     
     public function purchase(array $parameters = array())
     {
+        $parameters['gateway'] = $this;
         return $this->createRequest(PurchaseRequest::class, $parameters);
     }
 
     public function completePurchase(array $parameters = array())
     {
+        $parameters['gateway'] = $this;
         return $this->createRequest(CompletePurchaseRequest::class, $parameters);
+    }
+
+    public function register($listener)
+    {
+        $this->listeners[] = $listener;
+    }
+
+    public function getListeners()
+    {
+        return $this->listeners;
     }
 }

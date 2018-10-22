@@ -3,6 +3,7 @@
 namespace DigiTickets\Pay360\Messages;
 
 use DigiTickets\Pay360\AbstractPay360Request;
+use DigiTickets\Pay360\Listener;
 
 class PurchaseRequest extends AbstractPay360Request
 {
@@ -110,9 +111,17 @@ class PurchaseRequest extends AbstractPay360Request
 
     public function sendData($data)
     {
+        /** @var Listener $listener */
+        foreach ($this->getGateway()->getListeners() as $listener) {
+            $listener->update('purchaseSend', $data);
+        }
+
         try {
             $scpClient = $this->getScpService();
         } catch (\Throwable $t) {
+            foreach ($this->getGateway()->getListeners() as $listener) {
+                $listener->update('clientException', $t);
+            }
             error_log($t->getMessage().' '.$t->getTraceAsString());
             return $this->response = new PurchaseResponse($this, $t);
         }
@@ -121,7 +130,14 @@ class PurchaseRequest extends AbstractPay360Request
             $scpSimpleInvokeResponse = $scpClient->scpSimpleInvoke($data);
         } catch (\Throwable $t) {
             error_log($t->getMessage().' '.$t->getTraceAsString());
+            foreach ($this->getGateway()->getListeners() as $listener) {
+                $listener->update('receiveException', $t);
+            }
             return $this->response = new PurchaseResponse($this, $t);
+        }
+
+        foreach ($this->getGateway()->getListeners() as $listener) {
+            $listener->update('purchaseReceive', $scpSimpleInvokeResponse);
         }
 
         return $this->response = new PurchaseResponse($this, $scpSimpleInvokeResponse);
