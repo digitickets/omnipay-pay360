@@ -21,7 +21,7 @@ class PurchaseRequestTest extends PHPUnit_Framework_TestCase
             ]
         );
         $ref = "Hello Ma!";
-        $request->setTransactionReference($ref);
+        $request->setTransactionId($ref);
         $request->setFundCode(8);
         $request->setItems(
             [
