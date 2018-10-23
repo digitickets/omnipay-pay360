@@ -16,21 +16,36 @@ class CompletePurchaseResponse extends AbstractResponse
 
     public function getTransactionReference()
     {
-        return $this->getData()->scpReference;
+        if ($this->getData()) {
+            return $this->getData()->scpReference;
+        }
+
+        return '';
     }
 
     public function getCode()
     {
-        return $this->getData()->paymentResult->errorDetails->errorId;
+        if ($this->getData() && $this->getData()->paymentResult && $this->getData()->paymentResult->errorDetails) {
+            return $this->getData()->paymentResult->errorDetails->errorId;
+        }
+        return 0;
     }
 
     public function getMessage()
     {
-        return $this->getData()->paymentResult->errorDetails->errorMessage;
+        if ($this->getData() && $this->getData()->paymentResult && $this->getData()->paymentResult->errorDetails) {
+            return $this->getData()->paymentResult->errorDetails->errorMessage;
+        }
+
+        return '';
     }
 
     public function isSuccessful()
     {
-        return $this->getData()->paymentResult->status == 'SUCCESS';
+        if ($this->getData() && $this->getData()->paymentResult) {
+            return $this->getData()->paymentResult->status == 'SUCCESS';
+        }
+
+        return false;
     }
 }

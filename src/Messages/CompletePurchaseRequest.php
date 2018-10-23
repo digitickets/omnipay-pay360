@@ -19,7 +19,7 @@ class CompletePurchaseRequest extends AbstractPay360Request
     public function sendData($data)
     {
         foreach ($this->getGateway()->getListeners() as $listener) {
-            $listener->update('completeSend', $t);
+            $listener->update('completeSend', $data);
         }
 
         try {
@@ -44,8 +44,8 @@ class CompletePurchaseRequest extends AbstractPay360Request
 
         foreach ($this->getGateway()->getListeners() as $listener) {
             $listener->update('completeReceive', $scpSimpleQueryResponse);
-            $listener->update('completeExceptionSend', $scpClient->__getLastRequest());
-            $listener->update('completeExceptionRcv', $scpClient->__getLastResponse());
+            $listener->update('completeSend', $scpClient->__getLastRequest());
+            $listener->update('completeRcv', $scpClient->__getLastResponse());
         }
 
         return $this->response = new CompletePurchaseResponse($this, $scpSimpleQueryResponse);
