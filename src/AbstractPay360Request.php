@@ -90,7 +90,7 @@ abstract class AbstractPay360Request extends AbstractRequest
     protected function getCredentials()
     {
         $this->requestIdentification = new \scpService_requestIdentification();
-        $this->requestIdentification->uniqueReference = 'DT'.date('U');
+        $this->requestIdentification->uniqueReference = 'DT'.date('YmdHisu');
         $this->requestIdentification->timeStamp = (new DateTime('now', new DateTimeZone('UTC')))->format('YmdHis'); // Format: YYYYMMDDHHMMSS
 
         $subject = new \scpService_subject();
@@ -145,7 +145,7 @@ abstract class AbstractPay360Request extends AbstractRequest
     protected function getScpService()
     {
         /**
-         * The location is nbeing set as the wsdl file is only supplied from the test endpoint. This is set up as the
+         * The location is being set as the wsdl file is only supplied from the test endpoint. This is set up as the
          * default in the scpService class so can be supplied as null here
          */
         if ($this->getParameter('scpService') == null) {

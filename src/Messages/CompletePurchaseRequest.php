@@ -35,7 +35,8 @@ class CompletePurchaseRequest extends AbstractPay360Request
             $scpSimpleQueryResponse = $scpClient->scpSimpleQuery($data);
         } catch (\Throwable $t) {
             foreach ($this->getGateway()->getListeners() as $listener) {
-                $listener->update('completeException', $t);
+                $listener->update('completeExceptionSend', $scpClient->__getLastRequest());
+                $listener->update('completeExceptionRcv', $scpClient->__getLastResponse());
             }
             error_log($t->getMessage().' '.$t->getTraceAsString());
             return $this->response = new CompletePurchaseResponse($this, $t);
@@ -43,6 +44,8 @@ class CompletePurchaseRequest extends AbstractPay360Request
 
         foreach ($this->getGateway()->getListeners() as $listener) {
             $listener->update('completeReceive', $scpSimpleQueryResponse);
+            $listener->update('completeSend', $scpClient->__getLastRequest());
+            $listener->update('completeRcv', $scpClient->__getLastResponse());
         }
 
         return $this->response = new CompletePurchaseResponse($this, $scpSimpleQueryResponse);

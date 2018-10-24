@@ -69,7 +69,7 @@ class PurchaseRequest extends AbstractPay360Request
         $routing->scpId = $this->getRoutingScpId();
 
         $saleSummary = new \scpService_summaryData();
-        $saleSummary->description = $this->getTransactionReference();
+        $saleSummary->description = $this->getTransactionId();
         $saleSummary->amountInMinorUnits = $this->getAmountInteger();
 
         /** @var \scpService_simpleItem[]|\scpService_items $items */
@@ -131,13 +131,16 @@ class PurchaseRequest extends AbstractPay360Request
         } catch (\Throwable $t) {
             error_log($t->getMessage().' '.$t->getTraceAsString());
             foreach ($this->getGateway()->getListeners() as $listener) {
-                $listener->update('receiveException', $t);
+                $listener->update('purchaseExceptionSend', $scpClient->__getLastRequest());
+                $listener->update('purchaseExceptionRcv', $scpClient->__getLastResponse());
             }
             return $this->response = new PurchaseResponse($this, $t);
         }
 
         foreach ($this->getGateway()->getListeners() as $listener) {
             $listener->update('purchaseReceive', $scpSimpleInvokeResponse);
+            $listener->update('purchaseSend', $scpClient->__getLastRequest());
+            $listener->update('purchaseRcv', $scpClient->__getLastResponse());
         }
 
         return $this->response = new PurchaseResponse($this, $scpSimpleInvokeResponse);
