@@ -19,7 +19,7 @@ class CompletePurchaseRequest extends AbstractPay360Request
     public function sendData($data)
     {
         foreach ($this->getGateway()->getListeners() as $listener) {
-            $listener->update('completeSend', $t);
+            $listener->update('completeSend', $data);
         }
 
         try {
