@@ -79,7 +79,7 @@ class PurchaseRequest extends AbstractPay360Request
         foreach ($this->getItems() as $itemBagItem) {
             $itemSummary = new \scpService_summaryData();
             $itemSummary->description = $itemBagItem->getName();
-            $itemSummary->amountInMinorUnits = (int) (100*$itemBagItem->getPrice()) * $itemBagItem->getQuantity();
+            $itemSummary->amountInMinorUnits = (int) round(100*$itemBagItem->getPrice()*$itemBagItem->getQuantity());
             $itemSummary->reference = $this->getReference();
 
             $lgItemItemDetails = new \scpService_lgItemDetails();
