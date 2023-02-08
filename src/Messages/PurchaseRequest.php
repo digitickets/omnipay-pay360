@@ -58,6 +58,16 @@ class PurchaseRequest extends AbstractPay360Request
         $this->setParameter('fundCode', $value);
     }
 
+    public function getAdditionalReference()
+    {
+        return $this->getParameter('additionalReference');
+    }
+
+    public function setAdditionalReference($value)
+    {
+        $this->setParameter('additionalReference', $value);
+    }
+
     public function getData()
     {
         $this->validate('returnUrl','cancelUrl','routingSiteId','routingScpId','amount');
@@ -84,6 +94,9 @@ class PurchaseRequest extends AbstractPay360Request
 
             $lgItemItemDetails = new \scpService_lgItemDetails();
             $lgItemItemDetails->fundCode = $this->getFundCode();
+            if($this->getAdditionalReference()) {
+                $lgItemItemDetails->additionalReference = $this->getAdditionalReference();
+            }
 
             $item = new \scpService_simpleItem();
             $item->itemSummary = $itemSummary;
