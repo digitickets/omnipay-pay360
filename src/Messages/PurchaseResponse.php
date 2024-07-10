@@ -59,6 +59,11 @@ class PurchaseResponse extends AbstractResponse implements RedirectResponseInter
                 }
             }
         }
+        if($scpResponse instanceof \SoapFault){
+            /** @var \SoapFault $scpResponse */
+            throw new \Exception("SOAP Error: " . $scpResponse->getMessage() . " - " . $scpResponse->getCode());
+        }
+
         $this->transactionRef = $scpResponse->scpReference;
     }
 
