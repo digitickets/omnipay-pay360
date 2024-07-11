@@ -4,6 +4,9 @@ namespace DigiTickets\Pay360\Messages;
 
 use DigiTickets\Pay360\AbstractPay360Request;
 use DigiTickets\Pay360\Listener;
+use scpService_billingDetails;
+use scpService_cardHolderDetails;
+use scpService_contact;
 
 class PurchaseRequest extends AbstractPay360Request
 {
@@ -111,6 +114,23 @@ class PurchaseRequest extends AbstractPay360Request
         $sale->saleSummary = $saleSummary;
         $sale->items = $items;
 
+        $card = $this->getCard();
+
+        $cardHolderDetails = new scpService_cardHolderDetails();
+        if ($card->getName()) {
+            $cardHolderDetails->cardHolderName = $card->getName();
+        }
+
+        if ($card->getEmail()) {
+            $contact = new scpService_contact();
+            $contact->email = $card->getEmail();
+            $contact->telephone = $card->getPhone();
+            $cardHolderDetails->contact = $contact;
+        }
+
+        $billing = new scpService_billingDetails();
+        $billing->cardHolderDetails = $cardHolderDetails;
+
         $scpSimpleInvokeRequest = new \scpService_scpSimpleInvokeRequest();
         $scpSimpleInvokeRequest->credentials = $this->getCredentials();
         $scpSimpleInvokeRequest->requestType = 'payOnly';
@@ -118,6 +138,7 @@ class PurchaseRequest extends AbstractPay360Request
         $scpSimpleInvokeRequest->routing = $routing;
         $scpSimpleInvokeRequest->panEntryMethod = 'ECOM';
         $scpSimpleInvokeRequest->sale = $sale;
+        $scpSimpleInvokeRequest->billing = $billing;
 
         return $scpSimpleInvokeRequest;
     }
