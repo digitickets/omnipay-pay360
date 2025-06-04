@@ -90,6 +90,10 @@ class PurchaseRequest extends AbstractPay360Request
             $itemSummary = new \scpService_summaryData();
             $itemSummary->description = $itemBagItem->getName();
             $itemSummary->amountInMinorUnits = (int) round(100*$itemBagItem->getPrice()*$itemBagItem->getQuantity());
+            if($itemSummary->amountInMinorUnits==0){
+                // As per interface spec, skip 0 value lines.
+                continue;
+            }
             $itemSummary->reference = $this->getReference();
 
             $lgItemItemDetails = new \scpService_lgItemDetails();
